@@ -18,14 +18,15 @@ RUN ln -svf /usr/share/zoneinfo/${TZ} /etc/localtime && \
 RUN pacman-key --init && pacman -Syu --noconfirm
 RUN pacman -S --noconfirm \
     base-devel git gdb wget patchelf elfutils file strace ltrace tmux \
-    python python-pip gnu-netcat ruby vim checksec xclip
+    python python-pip gnu-netcat ruby vim checksec xclip lib32-glibc
 
 WORKDIR ${HOME}
 
 RUN git clone --depth 1 https://github.com/pwndbg/pwndbg pwndbg && \
     cd pwndbg && chmod +x setup.sh && ./setup.sh
 
-RUN pip install --no-cache-dir -U pip ropper angr IPython && \
+RUN pip install --no-cache-dir --break-system-packages \
+    -U pip ropper angr IPython && \
     gem install one_gadget seccomp-tools && \
     rm -rf .local/share/gem/ruby/3.0.0/cache/*
 
@@ -37,6 +38,7 @@ COPY home/.vimrc .vimrc
 COPY home/.gdbinit .gdbinit
 COPY home/.bash_profile .bash_profile
 COPY home/.bashrc .bashrc
+COPY home/.tmux.conf .tmux.conf
 
 WORKDIR /chal
 CMD bash
