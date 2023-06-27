@@ -25,6 +25,8 @@ WORKDIR ${HOME}
 RUN git clone --depth 1 https://github.com/pwndbg/pwndbg pwndbg && \
     cd pwndbg && chmod +x setup.sh && ./setup.sh
 
+RUN git clone https://github.com/radareorg/radare2 && radare2/sys/install.sh
+
 RUN pip install --no-cache-dir --break-system-packages \
     -U pip ropper angr IPython && \
     gem install one_gadget seccomp-tools && \
