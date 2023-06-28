@@ -18,7 +18,7 @@ RUN ln -svf /usr/share/zoneinfo/${TZ} /etc/localtime && \
 RUN pacman-key --init && pacman -Syu --noconfirm
 RUN pacman -S --noconfirm \
     base-devel git gdb wget patchelf elfutils file strace ltrace tmux \
-    python python-pip gnu-netcat ruby vim checksec xclip lib32-glibc
+    python python-pip gnu-netcat ruby vim checksec xclip lib32-glibc nasm
 
 WORKDIR ${HOME}
 
