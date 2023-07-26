@@ -10,6 +10,7 @@ ENV HOME "/root"
 ENV EDITOR "vim"
 ENV PATH "$PATH:/usr/lib/python3.11/site-packages/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/bin"
 ENV DEBUGINFOD_URLS "https://debuginfod.elfutils.org/"
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
 
 RUN ln -svf /usr/share/zoneinfo/${TZ} /etc/localtime && \
     sed -i "s/^#${LANG}/${LANG}/g" /etc/locale.gen && \
@@ -25,16 +26,16 @@ WORKDIR ${HOME}
 RUN git clone --depth 1 https://github.com/pwndbg/pwndbg pwndbg && \
     cd pwndbg && chmod +x setup.sh && ./setup.sh
 
-RUN git clone https://github.com/radareorg/radare2 && radare2/sys/install.sh
-
-RUN pip install --no-cache-dir --break-system-packages \
-    -U pip ropper angr IPython && \
-    gem install one_gadget seccomp-tools && \
-    rm -rf .local/share/gem/ruby/3.0.0/cache/*
-
 RUN mkdir -pv bin && cd bin && \
     wget https://github.com/io12/pwninit/releases/download/3.3.0/pwninit && \
     chmod +x pwninit
+
+RUN git clone https://github.com/radareorg/radare2 && radare2/sys/install.sh
+
+RUN pip install --no-cache-dir \
+    -U pip ropper angr IPython pwn && \
+    gem install one_gadget seccomp-tools && \
+    rm -rf .local/share/gem/ruby/3.0.0/cache/*
 
 COPY home/.vimrc .vimrc
 COPY home/.gdbinit .gdbinit
